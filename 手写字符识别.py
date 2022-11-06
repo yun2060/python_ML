@@ -11,42 +11,70 @@ from sklearn.model_selection import train_test_split  # 分割数据集
 # from sklearn.tree import DecisionTreeClassifier,plot_tree
 # from sklearn.neural_network import MLPClassifier
 # from sklearn.metrics import confusion_matrix
-# from sklearn.model_selection import GridSearchCV#网格搜索
+# from sklearn.model_selection import GridSearchCV
 
-from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
-
-clf_gnb = GaussianNB()  # 高斯朴素贝叶斯
-clf_mnb = MultinomialNB()  # 多项式朴素贝叶斯
-clf_bnb = BernoulliNB()  # 伯努利朴素贝叶斯
+from sklearn.ensemble import BaggingClassifier,AdaBoostClassifier#集成学习
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.decomposition import PCA#主成分分析方法
 
 my_digit = load_digits()
 
 x = my_digit.data
 y = my_digit.target
 
-n = range(1, 100, 10)
 
-acc1 = []
-acc2 = []
-acc3 = []
-
+acc_ada = []
+acc_bag = []
+n=range(2,50,2)
 for i in n:
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=i)
-    clf_gnb.fit(x_train, y_train)
-    clf_mnb.fit(x_train, y_train)
-    clf_bnb.fit(x_train, y_train)
-    acc1.append(clf_gnb.score(x_test, y_test))
-    acc2.append(clf_mnb.score(x_test, y_test))
-    acc3.append(clf_bnb.score(x_test, y_test))
+    X=PCA(n_components=10).fit_transform(x,y)
+    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+    clf_ada=AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=i),n_estimators=100)
+    clf_bag=BaggingClassifier(base_estimator=DecisionTreeClassifier(max_depth=i),n_estimators=100)
+    clf_ada.fit(x_train,y_train)
+    clf_bag.fit(x_train,y_train)
+    acc_ada.append(clf_ada.score(x_test,y_test))
+    acc_bag.append(clf_bag.score(x_test,y_test))
+    
+plt.plot(n,acc_ada,'r-o',n,acc_bag,'b-o')
+plt.xlabel("max_depth")
+plt.ylabel("accuracy")
+plt.legend('AdaBoost','Bagging')
+    
+    
 
-plt.plot(n, acc1, 'bo--', label='GaussianNB')
-plt.plot(n, acc2, 'yo-', label='MultinomialNB')
-plt.plot(n, acc3, 'ro-', label='BernoulliNB')
-plt.xlabel('random_state')
-plt.ylabel('accuracy')
-# plt.legend(['GaussianNB','MultinomialNB','BernoulliNB'])
-plt.legend()
-plt.show()
+
+#贝叶斯方法
+# from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
+
+# clf_gnb = GaussianNB()  # 高斯朴素贝叶斯
+# clf_mnb = MultinomialNB()  # 多项式朴素贝叶斯
+# clf_bnb = BernoulliNB()  # 伯努利朴素贝叶斯
+
+# n = range(1, 100, 10)
+
+# acc1 = []
+# acc2 = []
+# acc3 = []
+
+# for i in n:
+#     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=i)
+#     clf_gnb.fit(x_train, y_train)
+#     clf_mnb.fit(x_train, y_train)
+#     clf_bnb.fit(x_train, y_train)
+#     acc1.append(clf_gnb.score(x_test, y_test))
+#     acc2.append(clf_mnb.score(x_test, y_test))
+#     acc3.append(clf_bnb.score(x_test, y_test))
+
+# plt.plot(n, acc1, 'bo--', label='GaussianNB')
+# plt.plot(n, acc2, 'yo-', label='MultinomialNB')
+# plt.plot(n, acc3, 'ro-', label='BernoulliNB')
+# plt.xlabel('random_state')
+# plt.ylabel('accuracy')
+# # plt.legend(['GaussianNB','MultinomialNB','BernoulliNB'])
+# plt.legend()
+# plt.show()
+
 # acc1=[]
 # acc2=[]
 # for i in range(1,2):
@@ -88,7 +116,6 @@ plt.show()
 # grid_search.fit(x_train,y_train)
 # print(grid_search.score(x_test,y_test))
 # print grid_search.mlp1.keys()
-
 
 # y_predict=clf.predict(x_test)
 # print(confusion_matrix(y_test, y_predict))

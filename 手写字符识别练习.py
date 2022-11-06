@@ -68,16 +68,16 @@ plt.savefig('MLmodel.png',dpi=1000)
 # y_test=np.array(y_test)[:500]#取出与测试集对应的标签
 
 
-# model=Sequential()#定义model
-# model.add(Conv2D(10,kernel_size=(3,3),padding='valid',activation='relu',input_shape=[28,28,1]))
-#kernel_size是卷积核的大小，strides是卷积核滑动的步长,padding是边缘填充方法，input_shape指输入的张量
-# model.add(MaxPool2D())#可加可不加，不使用池化的话，对步长进行调参
-# model.add(Flatten())
-# model.add(Dense(20,activation='relu'))
-# model.add(Dense(10,activation='softmax'))#输出层激活函数只能是softmax
-# model.compile(loss='categorical_crossentropy',metrics=['accuracy'])
-# model.fit(x_train,y_train,epochs=20,verbose=2,batch_size=64)
-# print(model.evaluate(x_test,y_test))
+model=Sequential()#定义model
+model.add(Conv2D(10,kernel_size=(3,3),padding='valid',activation='relu',input_shape=[28,28,1]))
+kernel_size是卷积核的大小，strides是卷积核滑动的步长,padding是边缘填充方法，input_shape指输入的张量
+model.add(MaxPool2D())#可加可不加，不使用池化的话，对步长进行调参
+model.add(Flatten())
+model.add(Dense(20,activation='relu'))
+model.add(Dense(10,activation='softmax'))#输出层激活函数只能是softmax
+model.compile(loss='categorical_crossentropy',metrics=['accuracy'])
+model.fit(x_train,y_train,epochs=20,verbose=2,batch_size=64)
+print(model.evaluate(x_test,y_test))
 
 
 
