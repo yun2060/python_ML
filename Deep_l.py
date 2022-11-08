@@ -6,8 +6,8 @@ Created on Wed Oct 19 17:03:20 2022
 """
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten ,Input,concatenate #全连接，卷积，池化，扁平,输入,连接
-from tensorflow.keras.models import Sequential#序贯模型
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Input, concatenate  # 全连接，卷积，池化，扁平,输入,连接
+from tensorflow.keras.models import Sequential  # 序贯模型
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical  # 对类别进行one—hot编码
 from tensorflow.keras.utils import plot_model
@@ -50,7 +50,7 @@ from tensorflow.keras.utils import plot_model
 # y_train=y[:800]
 # y_test=y[800:]
 
-#序贯模型
+# 序贯模型
 # my_cov=Sequential()
 # my_cov.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=[28, 28, 1], activation='relu'))
 # my_cov.add(MaxPooling2D())
@@ -61,7 +61,7 @@ from tensorflow.keras.utils import plot_model
 # my_cov.fit(x_train,y_train,batch_size=32, epochs=10, verbose=2)
 # print(my_cov.evaluate(x_test,y_test))
 
-#函数式模型
+# 函数式模型
 # my_input=Input(shape=[28,28,1])
 # conv=Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(my_input)#共享卷积层
 
@@ -84,37 +84,45 @@ from tensorflow.keras.utils import plot_model
 # print(my_model.evaluate(x_test,y_test))
 # plot_model(my_model,"model.png")
 
-x=mnist.load_data()[0][0][:2000]#训练数据
-y=mnist.load_data()[0][1][:2000]#标签
-x=x.reshape(2000,28,28,1)
-x2=x[:,::2,::2,:]
-x1_train=x[:1000]
-x1_test=x[1000:]
-y=to_categorical(y,10)
-ytrain=y[:1000]
-ytest=y[1000:]
-x2_train=x2[:1000]
-x2_test=x2[1000:]
+# x = mnist.load_data()[0][0][:2000]  # 训练数据
+# y = mnist.load_data()[0][1][:2000]  # 标签
+# x = x.reshape(2000, 28, 28, 1)
+# x2 = x[:, ::2, ::2, :]
+# x1_train = x[:1000]
+# x1_test = x[1000:]
+# y = to_categorical(y, 10)
+# ytrain = y[:1000]
+# ytest = y[1000:]
+# x2_train = x2[:1000]
+# x2_test = x2[1000:]
 
-input1=Input(shape=([28,28,1]))
-conv11=Conv2D(filters=20, kernel_size=(3, 3), padding='same', activation='relu')(input1)
-conv12=Conv2D(filters=80, kernel_size=(3, 3), padding='same', activation='relu')(conv11)
-pool1=MaxPooling2D()(conv12)
-flat1=Flatten()(pool1)
+input1 = Input(shape=([28, 28, 1]))
+conv11 = Conv2D(filters=20, kernel_size=(3, 3), padding='same', activation='relu')(input1)
+conv12 = Conv2D(filters=80, kernel_size=(3, 3), padding='same', activation='relu')(conv11)
+pool1 = MaxPooling2D()(conv12)
+flat1 = Flatten()(pool1)
 
+input2 = Input(shape=([14, 14, 1]))
+conv21 = Conv2D(filters=40, kernel_size=(3, 3), padding='same', activation='relu')(input2)
+conv22 = Conv2D(filters=30, kernel_size=(3, 3), padding='same', activation='relu')(conv21)
+pool2 = MaxPooling2D()(conv22)
+flat2 = Flatten()(pool2)
 
-input2=Input(shape=([14,14,1]))
-conv21=Conv2D(filters=40, kernel_size=(3, 3), padding='same', activation='relu')(input2)
-conv22=Conv2D(filters=30, kernel_size=(3, 3), padding='same', activation='relu')(conv21)
-pool2=MaxPooling2D()(conv22)
-flat2=Flatten()(pool2)
+final = concatenate([flat1, flat2])
+den1 = Dense(20, activation='tanh')(final)
+den2 = Dense(10, activation='softmax')(den1)
+my_model = Model(inputs=[input1, input2], outputs=den2)
+my_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+my_model.fit([x1_train, x2_train], ytrain, batch_size=32, epochs=10, verbose=2)
+print(my_model.evaluate([x1_test, x2_test], ytest))
+plot_model(my_model, "model1.png")
 
-final=concatenate([flat1,flat2])
-den1=Dense(20,activation=('tanh'))(final)
-den2=Dense(10,activation=('softmax'))(den1)
-my_model=Model(inputs=[input1,input2], outputs=den2)
-my_model.compile(optimizer='adam',loss='categorical_crossentropy', metrics=['acc'])
-my_model.fit([x1_train,x2_train],ytrain,batch_size=32,epochs=10, verbose=2)
-print(my_model.evaluate([x1_test,x2_test],ytest))
-plot_model(my_model,"model1.png")
+# import numpy as np
+# from tensorflow.keras.datasets import mnist
+# from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D
+# from tensorflow.keras import Model
+# from sklearn.model_selection import train_test_split
+# from tensorflow.python.keras.utils import np_utils
+# from tensorflow.keras.utils import plot_model
+
 
