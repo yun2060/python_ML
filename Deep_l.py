@@ -41,25 +41,25 @@ from tensorflow.keras.utils import plot_model
 # #                dpi=96)
 # plot_model(model, to_file='123.png', show_shapes=True)
 
-# x=mnist.load_data()[0][0][:1000]#训练数据
-# y=mnist.load_data()[0][1][:1000]#标签
-# x=x.reshape(1000,28,28,1)
-# y=to_categorical(y,10)
-# x_train=x[:800]
-# x_test=x[800:]
-# y_train=y[:800]
-# y_test=y[800:]
+x = mnist.load_data()[0][0][:1000]  # 训练数据
+y = mnist.load_data()[0][1][:1000]  # 标签
+x = x.reshape(1000, 28, 28, 1)
+y = to_categorical(y, 10)
+x_train = x[:800]
+x_test = x[800:]
+y_train = y[:800]
+y_test = y[800:]
 
 # 序贯模型
-# my_cov=Sequential()
-# my_cov.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=[28, 28, 1], activation='relu'))
-# my_cov.add(MaxPooling2D())
-# my_cov.add(Flatten())
-# my_cov.add(Dense(20, activation='tanh'))
-# my_cov.add(Dense(10, activation='softmax'))
-# my_cov.compile(optimizer='adam',loss='categorical_crossentropy', metrics=['acc'])
-# my_cov.fit(x_train,y_train,batch_size=32, epochs=10, verbose=2)
-# print(my_cov.evaluate(x_test,y_test))
+my_cov = Sequential()
+my_cov.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=[28, 28, 1], activation='relu'))
+my_cov.add(MaxPooling2D())
+my_cov.add(Flatten())
+my_cov.add(Dense(20, activation='tanh'))
+my_cov.add(Dense(10, activation='softmax'))
+my_cov.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+my_cov.fit(x_train, y_train, batch_size=32, epochs=10, verbose=2)
+print(my_cov.evaluate(x_test, y_test))
 
 # 函数式模型
 # my_input=Input(shape=[28,28,1])
@@ -96,26 +96,26 @@ from tensorflow.keras.utils import plot_model
 # x2_train = x2[:1000]
 # x2_test = x2[1000:]
 
-input1 = Input(shape=([28, 28, 1]))
-conv11 = Conv2D(filters=20, kernel_size=(3, 3), padding='same', activation='relu')(input1)
-conv12 = Conv2D(filters=80, kernel_size=(3, 3), padding='same', activation='relu')(conv11)
-pool1 = MaxPooling2D()(conv12)
-flat1 = Flatten()(pool1)
-
-input2 = Input(shape=([14, 14, 1]))
-conv21 = Conv2D(filters=40, kernel_size=(3, 3), padding='same', activation='relu')(input2)
-conv22 = Conv2D(filters=30, kernel_size=(3, 3), padding='same', activation='relu')(conv21)
-pool2 = MaxPooling2D()(conv22)
-flat2 = Flatten()(pool2)
-
-final = concatenate([flat1, flat2])
-den1 = Dense(20, activation='tanh')(final)
-den2 = Dense(10, activation='softmax')(den1)
-my_model = Model(inputs=[input1, input2], outputs=den2)
-my_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
-my_model.fit([x1_train, x2_train], ytrain, batch_size=32, epochs=10, verbose=2)
-print(my_model.evaluate([x1_test, x2_test], ytest))
-plot_model(my_model, "model1.png")
+# input1 = Input(shape=([28, 28, 1]))
+# conv11 = Conv2D(filters=20, kernel_size=(3, 3), padding='same', activation='relu')(input1)
+# conv12 = Conv2D(filters=80, kernel_size=(3, 3), padding='same', activation='relu')(conv11)
+# pool1 = MaxPooling2D()(conv12)
+# flat1 = Flatten()(pool1)
+#
+# input2 = Input(shape=([14, 14, 1]))
+# conv21 = Conv2D(filters=40, kernel_size=(3, 3), padding='same', activation='relu')(input2)
+# conv22 = Conv2D(filters=30, kernel_size=(3, 3), padding='same', activation='relu')(conv21)
+# pool2 = MaxPooling2D()(conv22)
+# flat2 = Flatten()(pool2)
+#
+# final = concatenate([flat1, flat2])
+# den1 = Dense(20, activation='tanh')(final)
+# den2 = Dense(10, activation='softmax')(den1)
+# my_model = Model(inputs=[input1, input2], outputs=den2)
+# my_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+# my_model.fit([x1_train, x2_train], ytrain, batch_size=32, epochs=10, verbose=2)
+# print(my_model.evaluate([x1_test, x2_test], ytest))
+# plot_model(my_model, "model1.png")
 
 # import numpy as np
 # from tensorflow.keras.datasets import mnist
@@ -124,5 +124,3 @@ plot_model(my_model, "model1.png")
 # from sklearn.model_selection import train_test_split
 # from tensorflow.python.keras.utils import np_utils
 # from tensorflow.keras.utils import plot_model
-
-
