@@ -8,6 +8,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras.utils import to_categorical  # 对类别进行one—hot编码
+from sklearn.model_selection import train_test_split
 
 # 导入数据
 data = []
@@ -40,11 +41,9 @@ data = np.array(data)  # 训练数据
 target = np.array(target)  # 标签
 data.reshape(899, 128, 256, 1)
 target = to_categorical(target, 10)
+
 # 设置数据集
-x_train = data[:600]
-y_train = target[:600]
-x_test = data[600:]
-y_test = target[600:]
+x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=0)
 
 from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, concatenate
 from tensorflow.keras import Model
@@ -62,8 +61,8 @@ from tensorflow.keras.utils import plot_model
 # plot_model(my_model, "model.png")
 
 input = Input(shape=[128, 256, 1])
-conv = Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(input)  # 共享卷积层
-conv1 = Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(conv)
+conv = Conv2D(filters=64, kernel_size=(7, 7), padding='same', activation='relu')(input)  # 共享卷积层
+conv1 = Conv2D(filters=64, kernel_size=(7, 7), padding='same', activation='relu')(conv)
 pool_1 = MaxPooling2D()(conv1)
 flat1 = Flatten()(pool_1)
 
