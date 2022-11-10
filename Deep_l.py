@@ -50,39 +50,39 @@ x_test = x[800:]
 y_train = y[:800]
 y_test = y[800:]
 
-# 序贯模型
-my_cov = Sequential()
-my_cov.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=[28, 28, 1], activation='relu'))
-my_cov.add(MaxPooling2D())
-my_cov.add(Flatten())
-my_cov.add(Dense(20, activation='tanh'))
-my_cov.add(Dense(10, activation='softmax'))
-my_cov.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
-my_cov.fit(x_train, y_train, batch_size=32, epochs=10, verbose=2)
-print(my_cov.evaluate(x_test, y_test))
+# # 序贯模型
+# my_cov = Sequential()
+# my_cov.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=[28, 28, 1], activation='relu'))
+# my_cov.add(MaxPooling2D())
+# my_cov.add(Flatten())
+# my_cov.add(Dense(20, activation='tanh'))
+# my_cov.add(Dense(10, activation='softmax'))
+# my_cov.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+# my_cov.fit(x_train, y_train, batch_size=32, epochs=10, verbose=2)
+# print(my_cov.evaluate(x_test, y_test))
 
 # 函数式模型
-# my_input=Input(shape=[28,28,1])
-# conv=Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(my_input)#共享卷积层
+my_input = Input(shape=[28, 28, 1])
+conv = Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(my_input)  # 共享卷积层
 
-# conv1=Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(conv)
-# pool_1=MaxPooling2D()(conv1)
-# flat1=Flatten()(pool_1)
+conv1 = Conv2D(filters=64, kernel_size=(3, 3), padding='same', activation='relu')(conv)
+pool_1 = MaxPooling2D()(conv1)
+flat1 = Flatten()(pool_1)
 
-# conv2=Conv2D(filters=20, kernel_size=(5, 5), padding='same', activation='tanh')(conv)
-# pool_2=MaxPooling2D()(conv2)
-# flat2=Flatten()(pool_2)
+conv2 = Conv2D(filters=20, kernel_size=(5, 5), padding='same', activation='tanh')(conv)
+pool_2 = MaxPooling2D()(conv2)
+flat2 = Flatten()(pool_2)
 
-# final=concatenate([flat1,flat2])
-# dense1=Dense(20,activation='relu')(final)
-# dense2=Dense(30,activation='relu')(dense1)
-# out=Dense(10,activation='softmax')(dense2)
+final = concatenate([flat1, flat2])
+dense1 = Dense(20, activation='relu')(final)
+dense2 = Dense(30, activation='relu')(dense1)
+out = Dense(10, activation='softmax')(dense2)
 
-# my_model=Model(inputs=my_input,outputs=out)
-# my_model.compile(optimizer='adam',loss='categorical_crossentropy', metrics=['acc'])
-# my_model.fit(x_train,y_train,batch_size=32, epochs=10, verbose=2)
-# print(my_model.evaluate(x_test,y_test))
-# plot_model(my_model,"model.png")
+my_model = Model(inputs=my_input, outputs=out)
+my_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+my_model.fit(x_train, y_train, batch_size=32, epochs=10, verbose=2)
+print(my_model.evaluate(x_test, y_test))
+plot_model(my_model, "model.png")
 
 # x = mnist.load_data()[0][0][:2000]  # 训练数据
 # y = mnist.load_data()[0][1][:2000]  # 标签
